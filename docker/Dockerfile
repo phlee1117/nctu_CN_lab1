@@ -1,14 +1,14 @@
 # Download base image from yungshenglu/ubuntu-env:16.04 (Task 1.)
-
+FROM yungshenglu/ubuntu-env:16.04
 
 # Update software repository (Task 1.)
+RUN apt-get update
 
-
-# Install software repository (Task 1.)
-
+# Install software repository (Task 1.) apt-get -y always answers yes
+RUN apt-get -y install tcpdump
 
 # Install packages (Task 1.)
-
+RUN pip install scapy
 
 # Use argument to assign passwd to create image
 RUN echo 'root:cn2018' | chpasswd
@@ -23,9 +23,10 @@ ENV LC_ALL C
 RUN echo "export VISIBLE=now" >> /etc/profile
 
 # Set the container listens on the specified ports at runtime (Task 1.)
-
+EXPOSE 22
 
 # Set the entrypoint
 CMD ["/usr/sbin/sshd", "-D"]
 
 # Clone the repository from GitHub (Task 1.)
+RUN git clone https://github.com/yungshenglu/Packet_Manipulation
