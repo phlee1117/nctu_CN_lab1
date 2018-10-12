@@ -16,6 +16,8 @@ received = []
 '''
 Handle the received packet
 '''
+
+
 def packetHandler(packet):
     # Use global variable
     global id, received
@@ -25,10 +27,10 @@ def packetHandler(packet):
 
     # Filtering packet
     if TCP in packet and packet['IP'].src == src_ip:
-        if packet['TCP'].seq == 2: 
+        if packet['TCP'].seq == 2:
             print '[INFO] Receive packet with customized protocol'
             id = str(packet['Raw'])[-6:]
-        elif packet['TCP'].seq == 3: 
+        elif packet['TCP'].seq == 3:
             print '[INFO] Receive packet with secret payload'
             received.append(packet['Raw'])
 
@@ -36,13 +38,15 @@ def packetHandler(packet):
 '''
 Main function
 '''
+
+
 def main():
     # Sniff packets on destination interface (Task 4.)
     print '[INFO] Sniff on %s' % dst_iface
-    packets = sniff(iface = dst_iface, prn = lambda x : packetHandler(x))
+    packets = sniff(iface=dst_iface, prn=lambda x: packetHandler(x))
 
     # Dump the sniffed packet into PCAP file (Task 4.)
-    print '[INFO] Write into PCAP file'   
+    print '[INFO] Write into PCAP file'
     filename = './out/lab1_0' + id + '.pcap'
     wrpcap(filename, packets)
 
@@ -50,7 +54,7 @@ def main():
     with open('./out/recv_secret.txt', 'w') as file:
         for line in received:
             file.write('%s' % line)
-    
+
     # Finishing receiving in a duration
     print '[INFO] Finish receiving packets in a duration'
 

@@ -17,15 +17,17 @@ dst_port = 80
 '''
 Main function
 '''
+
+
 def main():
     # Define IP header (Task 3.)
-    ip = IP(src = src_ip, dst = dst_ip)
+    ip = IP(src=src_ip, dst=dst_ip)
 
     # Define customized header (Task 3.)
     my_id = '0616077'
     my_dept = 'cs'
     my_gender = 'male'
-    student = Protocol(id = my_id, dept = my_dept, gender = my_gender)
+    student = Protocol(id=my_id, dept=my_dept, gender=my_gender)
 
     # Read file and store into list
     count = 0
@@ -40,7 +42,7 @@ def main():
     # Send packets
     for i in range(0, len(secret)):
         # TCP connection - SYN / SYN-ACK
-        tcp_syn = TCP(sport = src_port, dport = dst_port, flags = 'S', seq = 0)
+        tcp_syn = TCP(sport=src_port, dport=dst_port, flags='S', seq=0)
         packet = ip / tcp_syn
         tcp_syn_ack = sr1(packet)
         print '[INFO] Send SYN and receive SYN-ACK'
@@ -48,25 +50,26 @@ def main():
 
         # TCP connection - ACK (Task 3.)
         print '[INFO] Send ACK'
-	ack = tcp_syn_ack.seq + 1
-	tcp_ack = TCP(sport = src_port, dport = dst_port, flags = 'A', seq = 1, ack = ack)
-	packet = ip / tcp_ack
-	send(packet)
+        ack = tcp_syn_ack.seq + 1
+        tcp_ack = TCP(sport=src_port, dport=dst_port, flags='A', seq=1, ack=ack)
+        packet = ip / tcp_ack
+        send(packet)
 
         # Send packet with customized header (Task 3.)
         print '[INFO] Send packet with customized header'
-	ack = tcp_ack.seq + 1
-	tcp = TCP(sport = src_port, dport = dst_port, flags = '', seq = 2, ack = ack)
-	packet = ip / tcp / student
-	send(packet)
-	
+        ack = tcp_ack.seq + 1
+        tcp = TCP(sport=src_port, dport=dst_port, flags='', seq=2, ack=ack)
+        packet = ip / tcp / student
+        send(packet)
+
         # Send packet with secret payload (Task 3.)
         print '[INFO] Send packet with secret payload'
-	ack = tcp.seq + 1
-	tcp = TCP(sport = src_port, dport = dst_port, flags = '', seq = 3, ack = ack)
-	payload = Raw(secret[i])
-	packet = ip / tcp / payload
-	send(packet)
-        
+        ack = tcp.seq + 1
+        tcp = TCP(sport=src_port, dport=dst_port, flags='', seq=3, ack=ack)
+        payload = Raw(secret[i])
+        packet = ip / tcp / payload
+        send(packet)
+
+
 if __name__ == '__main__':
     main()
